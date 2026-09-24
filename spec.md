@@ -368,7 +368,8 @@ Super Admin (Supabase dashboard + portal)
 
 ### Source Spreadsheet
 
-- **Name:** "New Hires 2025" (Google Sheets)
+- **Name:** "New Hires 2026" (Google Sheets) — changes yearly (e.g., "New Hires 2027" next year)
+- **Configured via environment variable:** `GOOGLE_SPREADSHEET_ID` — update in Vercel dashboard when the spreadsheet changes. No code changes needed.
 - **Tab 1:** "Client Schedule RCEB" (Regional Center of the East Bay — primarily Alameda County)
 - **Tab 2:** "Client Schedule GGRC" (Golden Gate Regional Center — primarily Contra Costa / SF / San Mateo)
 
@@ -446,7 +447,7 @@ Portal shows updated shifts in real-time (Supabase Realtime)
 2. Enable Google Sheets API
 3. Create a Service Account → download JSON key
 4. Share the spreadsheet with the service account email (read-only)
-5. Store the service account credentials as Vercel environment variables (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `GOOGLE_SPREADSHEET_ID`)
+5. Store the service account credentials as Vercel environment variables (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_PRIVATE_KEY`, `GOOGLE_SPREADSHEET_ID`). When the spreadsheet changes yearly (e.g., "New Hires 2027"), just update `GOOGLE_SPREADSHEET_ID` in Vercel — no code deploy needed.
 
 ### Admin Sync Dashboard (within Open Shifts page)
 
