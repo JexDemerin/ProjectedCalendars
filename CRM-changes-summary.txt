@@ -1,0 +1,167 @@
+TOGETHER HOMECARE CRM: SUMMARY OF CHANGES
+Repo: Raffmorales/Togetherhomecare-CRM (Next.js on Supabase, Vercel auto-deploys main)
+Work branch: claude/lucid-darwin-nkp5fs. All PRs #1 to #19 are merged into main.
+Written: Oct 19, 2026
+
+======================================================================
+1. SHIFT SYNC (WellSky scan -> CRM)
+======================================================================
+- Shifts sync automatically. A "Shift sync" status and a "Refresh shifts"
+  button sit on the Service calendar, and an automatic sync runs at most
+  every few minutes, alongside the 5-minute cron (/api/sync).
+- Fixes:
+  - A blank future Log tab (e.g. November) no longer breaks the sync.
+  - Each month reads its own Log tab, including hidden tabs and past and
+    future months.
+  - Duplicate row keys are de-duplicated. This fixed the "ON CONFLICT"
+    error.
+  - Recurring WellSky schedules get one row key per day, so every day of a
+    recurring shift is kept.
+- Apps Script (ShiftVerification sheet): upsertLogRows_ now matches rows by
+  row_key and shift_date (build "row-key-per-day-1"). It must be deployed
+  as a new version, and weeks 10/12-18, 10/19-25 and 10/26-11/01 rescanned.
+- Future shifts come ONLY from the WellSky scan. Imported future shifts
+  were removed.
+- Database: migration 0020 adds actual_start / actual_end (clock punches)
+  to cal_scan_visits.
+
+======================================================================
+2. SERVICE CALENDAR VIEWS (Calendar / Grid / WellSky)
+======================================================================
+- All three views show the same shifts, from the scan.
+- Calendar view:
+  - Runs on scanned shifts.
+  - The day panel shows "Scheduled time" and "Actual clock in / out".
+  - Shows the Client Hours tab's shifts too.
+- Grid view: mirrors the ShiftVerification "Payroll" (by caregiver) and
+  "Client Hours" (by client) tabs, including:
+  - numbers, colors and hover notes
+  - Angelica's manual edits
+  - split cells (one color band per shift, earliest first)
+  - a sticky header
+- WellSky view: a week view. Boxes are sorted by start time, earliest
+  first.
+- Hover cards:
+  - In the style of the first app, clickable, placed close to the cell,
+    and stay open long enough to use.
+  - Card outlines match the cell color, and client names are bold.
+  - Activity notes are cleaned: WellSky's "(Added to shift ...)" and
+    "(Added to care log on ...)" text is removed, and long notes stop at
+    3 lines.
+- RCEB / GGRC area filter on all views, and a purple EOR chip for EOR
+  caregivers.
+- Tables: sheet column order, hideable columns, and Blush (pastel pink)
+  alternating rows.
+
+======================================================================
+3. SHIFT VERIFICATION (new)
+======================================================================
+Only finished shifts can be verified: completed, or a missed clock-in or
+clock-out. Future and cancelled shifts get no mark and no buttons.
+
+Marks: one small circle per shift, the same in every view.
+  green check  = verified (by the parent or by an admin)
+  red X        = not verified yet
+  slate clock  = sent to the parent, waiting
+  amber ?      = the parent messaged the office about it
+- Grid cells: one mark per shift, in the top-right corner of its own color
+  band. The hours sit just under the marks (same cell size as before).
+- WellSky boxes and Calendar cards: the mark is in the top-right corner.
+
+Buttons, inside each shift's outline (Grid/WellSky hover cards and the
+Calendar day panel):
+- Verify with parent:
+  - Sends the shift to the family's portal.
+  - The parent email comes from the client's "Email ID" on the Clients
+    tab, matched by UCI, then by name.
+- Verify as admin:
+  - Asks for the staff member's own PIN.
+  - Marks the shift verified in the CRM and records it on the portal's
+    office page as "Verified · by admin · name". The family never sees it.
+- Unverify (on a verified shift): asks for the PIN, then:
+  - If the PARENT verified it: the portal reopens it, and it goes back to
+    the family as a normal visit to verify, with the usual notification.
+  - If an ADMIN verified it: it goes back to not verified, and the
+    portal's office page shows "Unverified · by admin · name".
+- Before sending, Verify with parent gets the portal's copy ready (reopen /
+  unverify / withdraw as needed). It only says "Sent" once the portal
+  really has the visit waiting for the family.
+
+Verification PIN:
+- Each staff member sets their own PIN under Your account > Verification
+  PIN, with a CRM password check.
+- 4 to 6 digits, stored as a scrypt hash.
+- 5 wrong tries lock verifying for 10 minutes.
+
+Speed:
+- Verify / unverify update the screen immediately.
+- Portal updates for admin actions run right after the response.
+- The CRM reads parents' answers from the portal every minute while the
+  calendar is open, when you return to the tab, and every 5 minutes with
+  the cron.
+
+Database (migration 0021, applied):
+- cal_verifications: one row per shift (row_key). Holds status, via
+  parent/admin, who/when, and the parent's message.
+- admin_pins: PIN hashes, server-only.
+
+Vercel environment variable (set):
+- CRM_VERIFY_SECRET = the portal's Vault secret crm_verify_secret.
+- PORTAL_VERIFY_URL is optional; it defaults to the portal's
+  verifications-intake.
+
+======================================================================
+4. CRM <-> PORTAL CONNECTION (for the Portal chat)
+======================================================================
+The CRM uses the portal's verifications-intake, as documented in the
+portal's docs/crm-hours-verification.md (migrations 075 and 079):
+- POST visits:
+  external_id = the CRM's cal_scan_visits.row_key
+  plus parent_email, client_name ("First Last"), caregiver_name
+  ("First L."), visit_date, clock_in/out, scheduled_start/end (Pacific
+  ISO times).
+- POST verified_by_admin + verified_at: admin verified (sent with the
+  visit details).
+- POST unverified_by_admin: admin unverified.
+- POST reopen: true: reopen a visit the family verified.
+- POST cancelled: true: used only to move an "unverified" visit back to
+  the family when Verify with parent is clicked again.
+- GET ?since= (polling) and GET ?ids= (checking before and after sending).
+Portal pull-to-refresh on Verify hours is live (built by the Portal chat).
+
+======================================================================
+5. TEST DATA (dummy, clearly labeled)
+======================================================================
+- Client "Client, Jex (Dummy)": UCI DUMMY-JEX.
+  - Portal family account: ijexdemerin@gmail.com.
+  - Caregiver on all its shifts: "D, Pola" (Pola D, a test caregiver).
+- About 17 shifts, Oct 11 to 21:
+  - Oct 11: a single shift.
+  - Oct 16: two shifts on one day, one completed and one missed clock-in.
+  - Oct 17: two missed clock-outs.
+  - Oct 20 to 21: scheduled.
+- Every dummy row's key starts with "DUMMY-". The syncs never delete them,
+  and the dashboard leaves them out.
+- To remove later: delete rows whose uci / row_key starts with "DUMMY-"
+  from cal_clients, cal_shifts, cal_scan_visits, cal_visit_status and
+  cal_verifications, and remove src/lib/dummy.ts.
+
+======================================================================
+6. PLANNED, NOT BUILT YET (on hold)
+======================================================================
+In the agreed order:
+1. Points ledger:
+   - Parents earn points for verifying: 30 within 3 days, sliding down to
+     a floor of 10 at 7+ days.
+   - Caregivers earn points for on-time clock in/out (+/-10 min), a clean
+     WellSky record, and reading announcements.
+   - Points are earned only, never expire, and there is no leaderboard.
+2. Badges: admin-only, each admin uses their own PIN, and the whole team
+   is notified in the app.
+3. Incentive programs: a spec .md, then AI rules, admin approval,
+   enrollment, and a daily tracking table.
+4. Store for caregivers and parents: ordering-app style, no money and no
+   live tracking.
+5. Google Chat task bot: Claude Sonnet reads one group chat, @mentions
+   become tasks, vague messages get a reply asking for details, and a
+   "Needs review" list catches what it can't place.
