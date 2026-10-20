@@ -1,0 +1,23 @@
+Installing a THC Chrome extension on a Mac
+
+1. Download the zip (for example "THC Text Blaster.zip").
+2. In Finder, open Downloads and double-click the zip. A folder with the same
+   name appears (for example "THC Text Blaster").
+3. Drag that folder into Documents. Chrome runs the extension from there, so
+   don't move or delete it afterwards.
+4. In Chrome, type chrome://extensions in the address bar and press Return.
+5. Turn on "Developer mode" (switch at the top right).
+6. Click "Load unpacked".
+7. In the window that opens, click Documents on the left. Click the extension
+   folder ONCE so it's highlighted, then click "Select".
+   - Don't double-click into it. Inside, the files show greyed out and the
+     window looks empty. That's normal on a Mac. Go back up one level and
+     click the folder once.
+8. Click the puzzle-piece icon in Chrome's toolbar and pin the extension.
+
+If Chrome says "Manifest file is missing or unreadable", the wrong folder was
+selected. Pick the folder that directly contains manifest.json.
+
+If the Documents folder looks empty or Chrome can't open it, give Chrome
+access: Apple menu > System Settings > Privacy & Security > Files and Folders
+> Google Chrome > turn on Documents.
