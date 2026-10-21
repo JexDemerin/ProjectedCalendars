@@ -20,4 +20,32 @@ Parts:
 6) Keys: caregiver = email, child = UCI.
 7) Spreadsheet: never "Make a copy". The Apps Script stays as is.
 
-Open questions were sent to Jex on Oct 21 (see chat): data findings and decisions needed before building.
+Decisions (Jex, Oct 21):
+1. Clients without a UCI: skip them, and list them for the office as "No UCI, not linked to the portal".
+2-4. Don't bulk-edit the New Hires sheet. Old Phone / Email ID / Schedule cells are converted only when someone
+     saves that client in the CRM; the save writes the new format. While editing, show the old cell text so
+     nothing is lost by accident.
+5. Primary/Secondary replace Assigned Caregiver. Never touch column L, and hide it from the CRM edit panel.
+   No automatic migration of the old free text.
+6. Duplicate records and missing information: notify the owner of each tab and ask them to check the record and
+   fill in what's missing. Angelica: Caregivers and Candidates. Jex: Applicants. Angelle: Clients.
+   (How to notify: still to be decided.)
+7. "Pending Confirmation from Client" syncs both ways (the portal has added it).
+8. A direct sheet edit is timestamped when the CRM's sync notices it. Accepted.
+9. A CRM save only adds or removes the labels the person changed, applied to the live sheet value.
+10. Matched / shift started: ADD Active, and remove only the labels about the shift being open or available
+    ("Recruitment/need to hire cg"; also "Matching..." and "Pending Caregiver Confirmation"? to confirm).
+11. EOR caregivers may be Primary, and the portal still auto-matches them.
+12. Work record starts Aug 1, 2026 (all the CRM has).
+13. Enroll: if the caregiver already has a portal account, don't re-enroll. Tell the admin they already have one.
+14. CRM: one row per child. Portal: one parent with several children.
+
+Sibling care (new): add a rule to every visit sent in crm-work-record, matching what the CRM and the
+ShiftVerification script already do (src/lib/day-hours.ts):
+- Same caregiver + same day + EXACTLY the same start and end on two or more children = sibling care
+  (one rate). The caregiver's hours count once (Naeem + Yusuf 5-7pm with Savanna = 2h for Savanna).
+- Any difference, even 1 minute (5:00-7:00 and 5:01-7:01), means 1:1 care. The caregiver's hours count for
+  each child (4h for Savanna).
+- In both cases, each child consumes their own full hours (Naeem 2h, Yusuf 2h).
+- Each visit carries sibling_group (a shared id for the group, else null), so the portal can show it the
+  same way.
