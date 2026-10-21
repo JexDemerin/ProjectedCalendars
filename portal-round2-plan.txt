@@ -1,4 +1,5 @@
-Portal integration, round 2 (CRM side). PLAN ONLY. Start only when Jex says "go".
+Portal integration, round 2 (CRM side). BUILT on the CRM branch claude/lucid-darwin-nkp5fs (commit 4784bf7), NOT live.
+To go live: merge the PR, apply migration 0022, then set PORTAL_ROUND2 in Vercel one endpoint at a time.
 Nothing may call the portal endpoints until the portal team confirms they are live.
 
 This replaces the earlier note. The spec is Jex's message of Oct 21 plus the approved mockup:
@@ -60,3 +61,7 @@ More decisions (Jex, Oct 21):
 - #10 confirmed: a match adds Active and removes Recruitment/need to hire cg, Matching...,
   Pending Caregiver Confirmation and Need replacement CG.
 - #3 confirmed: Primary/Secondary start blank. Staff will enter them one by one. No hint from the old column.
+
+Weekend matching (Oct 21): a child can be matched for weekdays and still need weekends. The portal sends
+active_shifts and open_shifts with each event. A match keeps the open-shift labels while open_shifts > 0;
+an unmatch removes Active only when active_shifts = 0.

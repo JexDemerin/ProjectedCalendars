@@ -1,0 +1,106 @@
+CRM side of round 2 is ready (built, tested, NOT live). The CRM won't call anything until you confirm each
+endpoint is live; then we switch them on one at a time. All calls: x-crm-secret = the same key as crm-eor-sync.
+Dummy test client/caregiver data is never sent.
+
+1) POST crm-client-caregivers   (CRM → portal; full list each time, replaces yours)
+Sent after a Primary/Secondary change and on the 5-minute sync when it changed (and once a day anyway).
+{
+  "clients": [{
+    "uci": "7715501",
+    "child_name": "Zade Kaileh",          // as written in the CRM
+    "child_first_name": "Zade",
+    "region": "RCEB",                     // or "GGRC"
+    "parent_emails": ["vk@x.com", "lk@x.com"],   // every email in the client's Email ID cell, Mom first
+    "mom_email": "vk@x.com", "dad_email": "lk@x.com",   // null when unknown
+    "primary_email": "maha@x.com", "primary_name": "Maha K",   // null when none picked
+    "secondary_emails": ["grace@x.com"], "secondary_names": ["Grace N"]
+  }],
+  "pending_requirements_emails": ["rosa@x.com"]   // caregivers who are "Pending Requirements" on Hired Caregivers:
+                                                  // use it for "Waiting for caregiver to complete onboarding"
+}
+- Every client with a UCI is included, even with no Primary yet (so you can link children). Clients without a UCI
+  are never sent; the CRM flags them to the office.
+- A picked caregiver with no email on Hired Caregivers appears in *_names but not in *_emails.
+Reply: { "ok": true, ... } or { "ok": false, "error": "..." }.
+
+2) POST crm-work-record   (CRM → portal; full list each time, replaces yours)
+Every WellSky visit from 2026-08-01 to today. You count only visits that are completed AND verified in the portal.
+{
+  "from": "2026-08-01",
+  "visits": [{
+    "visit_id": "<WellSky row key, stable>",
+    "caregiver_email": "savanna@x.com", "caregiver_name": "Amato, Savanna",
+    "uci": "1234567", "child_name": "Naeem ...",
+    "date": "2026-10-14", "start": "17:00", "end": "19:00",   // 24-hour; clocked times when clocked, else scheduled
+    "wellsky_status": "Completed",                             // WellSky's own text
+    "completed": true,                                         // the CRM's reading of that status
+    "sibling_group": "2026-10-14|savanna@x.com|17:00-19:00"    // or null
+  }]
+}
+SIBLING CARE (please count it this way, same as the CRM and the ShiftVerification script):
+- Same caregiver, same day, EXACTLY the same start and end for 2+ children = sibling care (one rate). Those visits
+  share a sibling_group. The caregiver's hours count ONCE for the group.
+- Any difference, even 1 minute (5:00–7:00 and 5:01–7:01), is 1:1 care: sibling_group is null and the caregiver's
+  hours count for each visit.
+- Either way, each child uses their own full hours.
+  Example: Naeem 5–7pm + Yusuf 5–7pm with Savanna → Savanna 2h; Naeem 2h, Yusuf 2h.
+           Naeem 5–7pm + Yusuf 5:01–7:01pm with Savanna → Savanna 4h; Naeem 2h, Yusuf 2h.
+- Visits whose WellSky caregiver name doesn't match exactly one Hired Caregivers email are not sent; the CRM lists
+  them for Angelica to fix.
+
+3) Current Status, both ways (per child, by UCI). Newest change wins on both sides, so every change carries a time.
+Label groups (exact spellings; leave alone any label you don't know):
+- Both ways: On Pause, Does not need care atm, Waiting for POS, Need replacement CG, Need Schedule Update,
+  Awaiting VIM, Transferring to others, Transferred Agency, Client is with another agency, Archived,
+  Recruitment/need to hire cg, Pending Confirmation from Client
+- CRM → portal only: Waiting for intake call, Unresponsive
+- Portal → CRM only: Active, Matching..., Pending Caregiver Confirmation, Waiting for caregiver to complete
+  onboarding, VIM scheduled
+
+3a) POST crm-client-status   (CRM → portal; you build this)
+{
+  "snapshot": false,
+  "clients": [{
+    "uci": "7715501", "child_name": "Zade Kaileh", "parent_emails": ["vk@x.com"],
+    "labels": [{ "label": "On Pause", "on": true, "at": "2026-10-21T18:04:00Z", "by": "Angelle" }]
+  }]
+}
+- Normal sends contain only labels that changed. Apply each one only if "at" is newer than your own last change
+  to that label for that child.
+- Once a day (and the very first time) "snapshot": true carries every CRM → portal label for every child (on or
+  off). Same rule: only apply what's newer. The first snapshot is the CRM's starting point.
+- Archived on → archive that child. When all of a family's children are Archived, the parent can't sign in.
+
+3b) The CRM's endpoint for you: https://togetherhomecare-crm.vercel.app/api/portal/client-status
+POST (x-crm-secret):
+{
+  "changes": [
+    { "uci": "7715501", "labels": [{ "label": "VIM scheduled", "on": true, "at": "2026-10-21T18:04:00Z" }], "by": "Teresa A." },
+    { "uci": "7712345", "event": "matched", "at": "2026-10-21T18:05:00Z", "active_shifts": 1, "open_shifts": 1, "by": "Office" }
+  ]
+}
+Events (the CRM decides the labels):
+- "matched" / "shift_started": tick Active. Untick Recruitment/need to hire cg, Matching..., Pending Caregiver
+  Confirmation and Need replacement CG, BUT ONLY WHEN open_shifts is 0. If the child still has an open shift
+  (e.g. weekdays matched, weekends still needed), those labels stay.
+- "unmatched": tick Recruitment/need to hire cg, and copy Schedule into Posting Schedule if that's empty.
+  Untick Active only when active_shifts is 0.
+- "post_on_website" (an exclusive shift being posted): tick Recruitment/need to hire cg (+ Posting Schedule if empty).
+  Exclusive shifts that are NOT posted must never send this (they stay off the website).
+- PLEASE SEND active_shifts and open_shifts with every event: the child's shifts that have a caregiver (matched or
+  started) and the ones still looking for one, after the event. Without them the CRM falls back to the simple rule
+  (a match clears all open-shift labels).
+Reply: { "ok": true, "results": [{ "uci", "applied": [...], "ignored": [{ "label", "reason" }], "error"? }] }
+- A label the CRM doesn't take from you, or an older change than the CRM's, comes back under "ignored".
+GET ?uci=1,2 → { "ok": true, "clients": [{ "uci", "child_name", "parent_emails", "labels": [{ "label", "on", "at" }] }] }
+(all children when no uci). Until the CRM switches this on, both return 503 "Not switched on in the CRM yet".
+
+4) POST crm-enroll-caregiver   (CRM → portal)
+{ "first_name": "Rosa", "last_initial": "M", "email": "rosa@x.com", "phone": "5105550123" }   // phone = 10 digits
+Expected reply: { "ok": true, "status": "created" | "already_enrolled", "user_id": "..." } or { "ok": false, "error": "..." }
+- Temp password = the phone digits, good for 7 days, must be changed at first sign-in (plus PIN).
+- If they already have an account, please don't reset anything; reply "already_enrolled". The CRM shows the admin
+  "already has a portal account" and won't offer the button again.
+- The CRM only enables the button when the record has an email and a 10-digit phone and isn't Separated.
+
+When each one is live, tell me which, and the CRM switches that one on.
