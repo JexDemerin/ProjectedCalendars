@@ -49,3 +49,14 @@ ShiftVerification script already do (src/lib/day-hours.ts):
 - In both cases, each child consumes their own full hours (Naeem 2h, Yusuf 2h).
 - Each visit carries sibling_group (a shared id for the group, else null), so the portal can show it the
   same way.
+
+More decisions (Jex, Oct 21):
+- Notifications for #6: a "Needs attention" area styled like notifications, not a plain list.
+  Plan: a bell in the CRM top bar with an unread count, opening a panel of cards for that person
+  (Angelica: Caregivers and Candidates; Jex: Applicants; Angelle: Clients).
+  Each card names the record and what's missing, with "Open record" and "Dismiss".
+  A card disappears when the record is fixed. Admins can switch to "Everyone's".
+  Make a mockup first, then build.
+- #10 confirmed: a match adds Active and removes Recruitment/need to hire cg, Matching...,
+  Pending Caregiver Confirmation and Need replacement CG.
+- #3 confirmed: Primary/Secondary start blank. Staff will enter them one by one. No hint from the old column.
