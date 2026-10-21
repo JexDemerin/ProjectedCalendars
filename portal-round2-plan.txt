@@ -1,0 +1,42 @@
+Portal integration, round 2 (CRM side). NOT STARTED.
+Start only when Jex says go. Nothing may call these endpoints until the portal team confirms they are live.
+
+All calls: POST https://wcnjdtryiboectgxfwdr.supabase.co/functions/v1/<name>
+Header: x-crm-secret = CRM_VERIFY_SECRET (same as crm-eor-sync and crm-caregiver-status).
+Always skip dummy rows (isDummy).
+Pattern for 2 and 3: GET the portal's list, compare, POST the FULL list only when it changed
+(same as syncEorToPortal / syncSeparatedToPortal).
+
+1) "Client Caregivers" tab in the "New Hires 2026" sheet, one row per child.
+   Columns: Client Name, UCI #, Region (RCEB/GGRC), Primary Caregiver, Secondary Caregiver, Last Updated.
+   - Primary/Secondary are picked from Hired Caregivers (a picker, not free text), so each maps to one caregiver and email.
+   - Add it to the CRM like the other tabs (view/edit). Don't change existing tabs or columns.
+
+2) crm-client-caregivers
+   { "clients": [ { "uci", "child_name", "parent_email", "region", "primary_email", "secondary_email" } ] }
+   - parent_email = the client's "Email ID" from Client Schedule (same as Hours verification).
+   - Send after a Client Caregivers save and on /api/sync.
+
+3) crm-work-record
+   { "records": [ { "caregiver_email", "uci", "child_name", "parent_email", "visits", "last_visit" } ] }
+   - Count a visit only when WellSky says completed AND it is verified (family or admin, from cal_verifications).
+     Never count unverified, scheduled-only or dummy visits.
+   - Match WellSky caregiver names to Hired Caregivers rows to get emails. Show unmatched names somewhere staff
+     can see them. Don't guess.
+   - Send on /api/sync and after new verification results come in.
+
+4) "Enroll to portal" button on each Hired Caregivers record -> crm-enroll-caregiver
+   { "first_name", "last_initial", "email", "phone" }
+   Response: { ok: true, status: "created" | "already_enrolled", user_id } or { ok: false, error }.
+   - The portal sets the temporary password to the phone digits, forces a new password + PIN at first sign-in,
+     and sends the instructions email.
+   - Disable the button when email or phone is missing, and say why.
+   - After success, show "Enrolled to portal · <date> · <who>" on the record (stored in the CRM) and log it
+     in the activity log.
+
+Already done: Separated caregivers -> portal archive (crm-caregiver-status, CRM PR #25).
+
+To check when starting:
+- How CRM tabs are defined (src/lib/tabs.ts) and how a picker column can point at Hired Caregivers.
+- How the tab is created in the Google Sheet (sync direction) without touching other tabs.
+- Where enrollment is stored (new table or a field) and how the activity log is written.
