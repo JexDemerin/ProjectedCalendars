@@ -65,3 +65,7 @@ More decisions (Jex, Oct 21):
 Weekend matching (Oct 21): a child can be matched for weekdays and still need weekends. The portal sends
 active_shifts and open_shifts with each event. A match keeps the open-shift labels while open_shifts > 0;
 an unmatch removes Active only when active_shifts = 0.
+
+Portal answers (Oct 21): one open shift per child. "Mark as started" asks if it covers all care; No → shift stays
+open (Partly covered), event shift_started with open_shifts 1 and posting_schedule = what's still open, which the
+CRM writes into Posting Schedule. "Copy from schedule" also copies the Specific lines (one per line, no label).
