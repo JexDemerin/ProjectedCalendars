@@ -1,42 +1,23 @@
-Portal integration, round 2 (CRM side). NOT STARTED.
-Start only when Jex says go. Nothing may call these endpoints until the portal team confirms they are live.
+Portal integration, round 2 (CRM side). PLAN ONLY. Start only when Jex says "go".
+Nothing may call the portal endpoints until the portal team confirms they are live.
 
-All calls: POST https://wcnjdtryiboectgxfwdr.supabase.co/functions/v1/<name>
-Header: x-crm-secret = CRM_VERIFY_SECRET (same as crm-eor-sync and crm-caregiver-status).
-Always skip dummy rows (isDummy).
-Pattern for 2 and 3: GET the portal's list, compare, POST the FULL list only when it changed
-(same as syncEorToPortal / syncSeparatedToPortal).
+This replaces the earlier note. The spec is Jex's message of Oct 21 plus the approved mockup:
+https://claude.ai/artifact/UjLgVvxD98Xr5vkYfN48Wb (CRM > Client record, Admin > Family profile, Admin > Notifications)
 
-1) "Client Caregivers" tab in the "New Hires 2026" sheet, one row per child.
-   Columns: Client Name, UCI #, Region (RCEB/GGRC), Primary Caregiver, Secondary Caregiver, Last Updated.
-   - Primary/Secondary are picked from Hired Caregivers (a picker, not free text), so each maps to one caregiver and email.
-   - Add it to the CRM like the other tabs (view/edit). Don't change existing tabs or columns.
+Parts:
+1) Client record form: Mother/Father fields saved as "Mom: ..."/"Dad: ..." lines in Phone (D) and Email ID (E).
+   Primary + Secondary caregivers saved to a new "Client Caregivers" tab. Schedule day boxes plus "Specific" in
+   Schedule (M). Posting schedule (N) gets a "Copy from schedule" button.
+2) Current Status sync, both ways, by UCI. Fixed label list; newest change wins; portal changes are logged as "Portal".
+   The CRM gets a new endpoint (x-crm-secret) for the portal to add/remove labels, and pushes its own changes
+   to the portal's crm-client-status.
+3) Client Caregivers -> portal crm-client-caregivers (on save and on /api/sync). Send the UCI, child name and both
+   parent emails.
+4) WellSky visits -> portal crm-work-record (caregiver email, UCI, date, start/end, WellSky status). The portal does
+   the counting. List names that don't map to a caregiver. Skip isDummy.
+5) Enroll to portal -> crm-enroll-caregiver (first name, last initial, email, phone digits). The temp password lasts
+   7 days; pressing again issues a fresh one.
+6) Keys: caregiver = email, child = UCI.
+7) Spreadsheet: never "Make a copy". The Apps Script stays as is.
 
-2) crm-client-caregivers
-   { "clients": [ { "uci", "child_name", "parent_email", "region", "primary_email", "secondary_email" } ] }
-   - parent_email = the client's "Email ID" from Client Schedule (same as Hours verification).
-   - Send after a Client Caregivers save and on /api/sync.
-
-3) crm-work-record
-   { "records": [ { "caregiver_email", "uci", "child_name", "parent_email", "visits", "last_visit" } ] }
-   - Count a visit only when WellSky says completed AND it is verified (family or admin, from cal_verifications).
-     Never count unverified, scheduled-only or dummy visits.
-   - Match WellSky caregiver names to Hired Caregivers rows to get emails. Show unmatched names somewhere staff
-     can see them. Don't guess.
-   - Send on /api/sync and after new verification results come in.
-
-4) "Enroll to portal" button on each Hired Caregivers record -> crm-enroll-caregiver
-   { "first_name", "last_initial", "email", "phone" }
-   Response: { ok: true, status: "created" | "already_enrolled", user_id } or { ok: false, error }.
-   - The portal sets the temporary password to the phone digits, forces a new password + PIN at first sign-in,
-     and sends the instructions email.
-   - Disable the button when email or phone is missing, and say why.
-   - After success, show "Enrolled to portal · <date> · <who>" on the record (stored in the CRM) and log it
-     in the activity log.
-
-Already done: Separated caregivers -> portal archive (crm-caregiver-status, CRM PR #25).
-
-To check when starting:
-- How CRM tabs are defined (src/lib/tabs.ts) and how a picker column can point at Hired Caregivers.
-- How the tab is created in the Google Sheet (sync direction) without touching other tabs.
-- Where enrollment is stored (new table or a field) and how the activity log is written.
+Open questions were sent to Jex on Oct 21 (see chat): data findings and decisions needed before building.
