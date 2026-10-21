@@ -103,4 +103,32 @@ Expected reply: { "ok": true, "status": "created" | "already_enrolled", "user_id
   "already has a portal account" and won't offer the button again.
 - The CRM only enables the button when the record has an email and a 10-digit phone and isn't Separated.
 
+5) NEED YOUR INPUT: partly matched children (weekdays covered, weekends still needed)
+The problem:
+- Some children have a caregiver for part of their schedule (e.g. weekdays) but still need one for the rest
+  (e.g. weekends). They should be Active AND still have "Recruitment/need to hire cg" (so they stay on the website).
+- Right now a match means "fully covered": the CRM ticks Active and unticks Recruitment, Matching..., Pending
+  Caregiver Confirmation and Need replacement CG, so the child drops off the website even though weekends are open.
+- I first suggested sending open_shifts (how many open shifts the child still has), but Jex says a child in the
+  portal only has ONE open shift, weekdays and weekends together, so a count can't show "partly covered".
+
+Proposed fix (please tell us if it fits how matching works in the portal, or suggest something better):
+- When the office matches a caregiver, the portal asks one question:
+    "Does this cover all of the child's care?"
+    ( ) Yes, fully covered
+    ( ) No, still need a caregiver for other days
+- Yes → the open shift closes as today; send the event with "open_shifts": 0.
+- No  → the child's one open shift STAYS OPEN for the remaining days (the office edits its schedule, e.g. to
+  weekends only); send the event with "open_shifts": 1.
+- The CRM already handles both: open_shifts 1 → ticks Active and KEEPS Recruitment etc.; open_shifts 0 → ticks
+  Active and unticks them. Nothing else changes on the CRM side.
+- Unmatching works the same way in reverse: send "active_shifts" (0 when no caregiver is left on the child, 1 when
+  one still is), so the CRM only unticks Active when nobody is left.
+
+Questions for you:
+a) Does "keep the one open shift open after a partial match" work in the portal, or does a match always close it?
+b) Would you rather allow more than one open shift per child (e.g. "Weekdays" and "Weekends") instead?
+c) Does a child keep their matched caregiver while their shift is still open for the other days?
+d) Anything in the Primary / Secondary flow (part 1) that this affects?
+
 When each one is live, tell me which, and the CRM switches that one on.
