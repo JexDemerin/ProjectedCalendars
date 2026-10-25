@@ -1,5 +1,5 @@
-Portal integration, round 2 (CRM side). BUILT on the CRM branch claude/lucid-darwin-nkp5fs (commit 4784bf7), NOT live.
-To go live: merge the PR, apply migration 0022, then set PORTAL_ROUND2 in Vercel one endpoint at a time.
+Portal integration, round 2 (CRM side). LIVE since Oct 25 (CRM PRs #26 and #27, migration 0024).
+Each connection is switched on by a row in portal_features (delete the row to switch it off).
 Nothing may call the portal endpoints until the portal team confirms they are live.
 
 This replaces the earlier note. The spec is Jex's message of Oct 21 plus the approved mockup:
@@ -69,3 +69,9 @@ an unmatch removes Active only when active_shifts = 0.
 Portal answers (Oct 21): one open shift per child. "Mark as started" asks if it covers all care; No → shift stays
 open (Partly covered), event shift_started with open_shifts 1 and posting_schedule = what's still open, which the
 CRM writes into Posting Schedule. "Copy from schedule" also copies the Specific lines (one per line, no label).
+
+Go-live (Oct 25): all five switched on: client-status-in, client-caregivers (231 sent, 89 linked),
+work-record (1,586 visits), client-status (first snapshot applied), enroll.
+The Hired Caregivers "Email Address" header had been typed over ("ly"); it's fixed, and PR #27 makes the
+CRM skip caregiver-email sends whenever no email can be read.
+Open question for the portal: the CRM has 117 children labelled Archived, but the portal shows 0 archived children.
