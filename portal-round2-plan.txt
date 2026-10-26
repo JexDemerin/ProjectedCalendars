@@ -85,3 +85,6 @@ Testing mode (Oct 26, CRM PR #29, migration 0025): dummy children Elysse (TEST-E
 Jex (Dummy) Client, and caregivers Pola D. + Two to Six. They live only in the CRM's copy (rows below zero), never in
 the sheet. The portal switches it via POST /api/portal/testing (ON shows and sends them, OFF sets them aside in
 test_rows, Reset restores the starting point). Tested: GET returns ok, testing off.
+Oct 26 (CRM PR #30): Testing mode adds 4 made-up completed visits to the work record (Yassi + Pola D. Oct 19/21/23
+3-6pm, Elysse + Two Oct 20 4-7pm), only while testing is on. Caregiver names with notes ("(direct referral from Liz)",
+"Fn:/Ln:") now match WellSky: work record went from 1,586 to 1,956 real visits.
