@@ -74,4 +74,9 @@ Go-live (Oct 25): all five switched on: client-status-in, client-caregivers (231
 work-record (1,586 visits), client-status (first snapshot applied), enroll.
 The Hired Caregivers "Email Address" header had been typed over ("ly"); it's fixed, and PR #27 makes the
 CRM skip caregiver-email sends whenever no email can be read.
-Open question for the portal: the CRM has 117 children labelled Archived, but the portal shows 0 archived children.
+Archived (answered Oct 26): the portal saved all 99 Archived labels by UCI; none of those UCIs is linked to a portal
+child yet, so nothing was archived. The label applies as soon as one gets linked.
+Portal 3c-2 (Oct 26), no CRM change needed: crm-client-caregivers now auto-matches the Primary (reply adds
+primary: {auto_matched, mismatches}); a newly Separated caregiver ends their matches and the portal ticks Need
+replacement CG (arrives as a normal label change); Archived / Transferred Agency / Client is with another agency
+end the match without sending unmatched, so Recruitment isn't added.
