@@ -80,3 +80,8 @@ Portal 3c-2 (Oct 26), no CRM change needed: crm-client-caregivers now auto-match
 primary: {auto_matched, mismatches}); a newly Separated caregiver ends their matches and the portal ticks Need
 replacement CG (arrives as a normal label change); Archived / Transferred Agency / Client is with another agency
 end the match without sending unmatched, so Recruitment isn't added.
+
+Testing mode (Oct 26, CRM PR #29, migration 0025): dummy children Elysse (TEST-ELYSSE) and Yassi (TEST-YASSI) under
+Jex (Dummy) Client, and caregivers Pola D. + Two to Six. They live only in the CRM's copy (rows below zero), never in
+the sheet. The portal switches it via POST /api/portal/testing (ON shows and sends them, OFF sets them aside in
+test_rows, Reset restores the starting point). Tested: GET returns ok, testing off.
