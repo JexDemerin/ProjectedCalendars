@@ -88,3 +88,7 @@ test_rows, Reset restores the starting point). Tested: GET returns ok, testing o
 Oct 26 (CRM PR #30): Testing mode adds 4 made-up completed visits to the work record (Yassi + Pola D. Oct 19/21/23
 3-6pm, Elysse + Two Oct 20 4-7pm), only while testing is on. Caregiver names with notes ("(direct referral from Liz)",
 "Fn:/Ln:") now match WellSky: work record went from 1,586 to 1,956 real visits.
+Oct 27 (CRM PRs #31-#33): Applicants list newest first. Test visits use TEST-VISIT-1..4 with dates relative to today.
+Test children moved to GGRC (San Francisco); test caregivers renamed Caregiver One (exampleinitial@gmail.com) to Six.
+Notifications moved from the bell to a sidebar Notifications page (portal style), super admins only (can_manage_users:
+Jex and Raff).
