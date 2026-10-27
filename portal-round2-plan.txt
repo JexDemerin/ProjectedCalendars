@@ -92,3 +92,6 @@ Oct 27 (CRM PRs #31-#33): Applicants list newest first. Test visits use TEST-VIS
 Test children moved to GGRC (San Francisco); test caregivers renamed Caregiver One (exampleinitial@gmail.com) to Six.
 Notifications moved from the bell to a sidebar Notifications page (portal style), super admins only (can_manage_users:
 Jex and Raff).
+Oct 27 (CRM PR #34): notifications routed. Clients -> Angelle (staff account "Angel", confirmed), Lizzie, Jose.
+Applicants -> Jex. Candidates + Hired Caregivers -> Angelica. WellSky names -> Ira (GGRC) / Hana (RCEB).
+Jex and Raff see everything; Jex has a "Mine: Applicants" chip. Others see only their own.
