@@ -42,3 +42,14 @@ Programs may need different content, but every program page keeps the same frame
 - Who looks after it, and who should see it?
 - Does anything need to go to the portal (e.g. caregivers seeing their progress), or is it CRM-only for now?
 - Does it link to the Incentives Google Doc from earlier?
+
+## Decisions (Nov 4, 2026, from mockup review)
+- Tasks live inside each program (Tasks tab); no "My tasks" in the sidebar. Sidebar: Programs › Incentives.
+- Tasks are only decisions made in the tool. Fixes done in WellSky (clock-ins/outs, reason tags) or the
+  Service calendar (verification) are shown as "On hold until fixed" with where to fix them; they clear on the next scan.
+- Program tabs: Pairings · Tasks · Payroll · Reports (Reports includes program health).
+- "Ask someone": pick a person + a short note; the task moves to them, they get a card on the CRM Notifications
+  page (no email), the asker sees "Asked <name> · waiting". Note and reply are kept in the pairing's history.
+- Roles: Hana and Ira = schedulers; Angelle = admin assistant (the spec's "admin"); Angelica = HR (most approvals);
+  Jex, Raff, Liz = super admins (the spec's "management").
+- Keep screens light: little helper text.
