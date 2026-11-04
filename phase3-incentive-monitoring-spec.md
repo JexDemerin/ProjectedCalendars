@@ -62,3 +62,6 @@ Programs may need different content, but every program page keeps the same frame
   5 Approved (when they finish the program; early ends still need super admin approval) · 6 Released (HR clicks
   Release and enters their PIN to confirm the bonus is on the payroll and the caregiver received it).
   Shown as a step tracker on each match and a step bar in the Matches list.
+- Guide: every program page has a Guide button. Basics (how it works, the 6 steps, tabs, who does what,
+  WellSky tags, labels) and scenarios (When / numbered steps / Done when). Ships with the program.
+- The mockup's walkthrough notes (canvas stickies A–G) are for Jex only and are NOT built.
