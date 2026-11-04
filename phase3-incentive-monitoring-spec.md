@@ -58,3 +58,7 @@ Programs may need different content, but every program page keeps the same frame
   "Add someone" covers manual enrollment.
 - Promos repeat: "New promo" sets new dates (rules copied from an earlier promo). Every program page has a Promo
   picker; older promos stay visible and keep running until paid. Tabs: Qualifiers · Pairings · Tasks · Payroll · Reports.
+- "Pairings" are called Matches. Every match follows 6 steps: 1 Qualified · 2 Accepted · 3 Day 1 · 4 90 days ·
+  5 Approved (when they finish the program; early ends still need super admin approval) · 6 Released (HR clicks
+  Release and enters their PIN to confirm the bonus is on the payroll and the caregiver received it).
+  Shown as a step tracker on each match and a step bar in the Matches list.
