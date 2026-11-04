@@ -1,6 +1,7 @@
 # Phase 3: Incentive program monitoring tool (CRM)
 
-Status: spec only. No code yet. The first program's details are still to come from Jex.
+Status: mockup stage. No code yet.
+First program: New Client Welcome. Full spec in ncw-spec.md; mockup: https://claude.ai/artifact/CxZGFu63ENQjM7vrXiJDYD
 
 Phase 3 covers both the portal and the CRM, and is split in two:
 1. **Monitoring tool for the incentive programs** (this document, first).
