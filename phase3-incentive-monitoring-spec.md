@@ -53,3 +53,8 @@ Programs may need different content, but every program page keeps the same frame
 - Roles: Hana and Ira = schedulers; Angelle = admin assistant (the spec's "admin"); Angelica = HR (most approvals);
   Jex, Raff, Liz = super admins (the spec's "management").
 - Keep screens light: little helper text.
+- No automatic enrollment (replaces spec section 9/13's "auto after 7 days"): the tool lists Qualifiers
+  (Highly qualified / Qualified / Check first, with the checks it ran) and a person Accepts or Declines.
+  "Add someone" covers manual enrollment.
+- Promos repeat: "New promo" sets new dates (rules copied from an earlier promo). Every program page has a Promo
+  picker; older promos stay visible and keep running until paid. Tabs: Qualifiers · Pairings · Tasks · Payroll · Reports.
