@@ -45,6 +45,11 @@ Example: Nov promo, Day 1 Nov 10, 2026 → Day 90 Feb 7, 2027 → Day 90 + 7 = F
   the client before the promo window) are not new and never qualify. A date taken from a shift shows "date estimated".
   WellSky history in the CRM starts Aug 1, 2026.
 
+## Added to Phase 2
+- Client record, Primary / Secondary: show a "Since" date next to each caregiver (today for a new pick, the recorded
+  date for existing ones). Anyone who can edit the record can change it; the change is saved to primary_history and
+  the audit log, and that date is used instead of the estimate.
+
 ## Still waiting
 - PIN lockout: keep 5 tries / 10 minutes (recommended) or remove.
 - Liz as super admin; rename the "Angel" account to Angelle.
