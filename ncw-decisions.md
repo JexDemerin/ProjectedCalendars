@@ -40,6 +40,11 @@ Example: Nov promo, Day 1 Nov 10, 2026 → Day 90 Feb 7, 2027 → Day 90 + 7 = F
 - Conflict check (family list): skipped. EOR caregivers (Hired Caregivers status "EOR") never qualify:
   Not qualified, reason "EOR caregiver".
 
+- Bulk entry of Primary/Secondary (Nov 2026): the "became Primary" date the program uses = the earlier of the day it was
+  entered in the CRM and the caregiver's first scheduled WellSky shift with that client. Existing pairings (shifts with
+  the client before the promo window) are not new and never qualify. A date taken from a shift shows "date estimated".
+  WellSky history in the CRM starts Aug 1, 2026.
+
 ## Still waiting
 - PIN lockout: keep 5 tries / 10 minutes (recommended) or remove.
 - Liz as super admin; rename the "Angel" account to Angelle.
