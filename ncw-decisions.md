@@ -25,6 +25,15 @@ Example: Nov promo, Day 1 Nov 10, 2026 → Day 90 Feb 7, 2027 → Day 90 + 7 = F
   a weekly reminder card to schedulers lists untagged caregiver cancellations; the Guide has a tags page.
 - Client date of birth: matched from the Birthdays tab by name (content coming).
 
+- Verification: schedulers will start using it soon. Until a match's shifts are verified it stays before Day 1 / On hold
+  (never approve unverified).
+- WellSky scans: Jexter runs them; none since Oct 27 yet.
+- Primary / Secondary: any internal team member can set them on the client record (changes §3). REMOVAL_REASON goes to
+  whoever removed the Primary; Angelica approves.
+- Caregiver names: no separate mapping table. Match WellSky names to Hired Caregivers by name (as the work record does)
+  and list names that don't match under Reports > Data to fix, while the team aligns CRM data with WellSky.
+- PIN: one global PIN per person (the existing "Verify as admin" PIN). Jex asked for no lockout; flagged (see reply).
+
 ## Still waiting
 - Backfill for matches made Nov 1 to go-live (explained to Jex, needs a choice).
 - Day-5 escalation person.
