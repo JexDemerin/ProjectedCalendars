@@ -68,3 +68,6 @@ Programs may need different content, but every program page keeps the same frame
 - Accepting a qualifier opens a confirmation popup with a PIN. Accepted/declined decisions can be undone (logged).
 - Payroll is paid outside the CRM: the button is "Mark as released" (popup + PIN) after payroll paid it.
   Approve and Mark as released: only Angelica (HR) and super admins. Schedulers and admin assistant see "Waiting for HR".
+- Every decision uses one popup layout with a PIN: accept a qualifier, approve, mark as released, and every task
+  action (approve/deny, checked/hold; the "no" side also asks for a reason). Ask someone needs no PIN.
+  Amount approvals in Tasks follow the Payroll rule: only Angelica and super admins.
