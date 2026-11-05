@@ -34,9 +34,12 @@ Example: Nov promo, Day 1 Nov 10, 2026 → Day 90 Feb 7, 2027 → Day 90 + 7 = F
   and list names that don't match under Reports > Data to fix, while the team aligns CRM data with WellSky.
 - PIN: one global PIN per person (the existing "Verify as admin" PIN). Jex asked for no lockout; flagged (see reply).
 
+- Backfill: matches made Nov 1 to go-live use the first scheduled shift with that client on or after Nov 1 as the
+  Primary date, shown "date estimated" so a person can correct it (source = backfill).
+- Day-5 escalation: Angelica.
+- Conflict check (family list): skipped. EOR caregivers (Hired Caregivers status "EOR") never qualify:
+  Not qualified, reason "EOR caregiver".
+
 ## Still waiting
-- Backfill for matches made Nov 1 to go-live (explained to Jex, needs a choice).
-- Day-5 escalation person.
-- Conflict check (family relationships): the CRM has no list; needs a choice.
-- Verification adoption, the stale WellSky scan (last Oct 27), who can set Primary, caregiver name mapping,
-  Liz as super admin / "Angel" account name, PIN rules.
+- PIN lockout: keep 5 tries / 10 minutes (recommended) or remove.
+- Liz as super admin; rename the "Angel" account to Angelle.
