@@ -1,5 +1,7 @@
 # New Client Welcome: what was built, and where it differs from the spec (Nov 5, 2026)
 
+> **Nov 6, 2026: the program is now 60 days, not 90.** Wherever these notes say 90 days or day 90, read 60 / day 60.
+
 Built in the CRM in 5 phases (PRs #40–#45), live on main. Section numbers are from spec.md.
 
 ## Decided (closes the earlier open items)

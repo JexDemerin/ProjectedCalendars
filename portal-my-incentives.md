@@ -1,6 +1,6 @@
 # For the portal chat: "My incentives" for caregivers
 
-The CRM now runs the caregiver Incentives programs. The first one is **New Client Welcome**: a caregiver earns up to $100 for becoming a new client's Primary caregiver and keeping it up for 90 days. Please add a caregiver-side **"My incentives"** menu to the portal. The CRM sends all the data; the portal only stores it and shows it.
+The CRM now runs the caregiver Incentives programs. The first one is **New Client Welcome**: a caregiver earns up to $100 for becoming a new client's Primary caregiver and keeping it up for 60 days. Please add a caregiver-side **"My incentives"** menu to the portal. The CRM sends all the data; the portal only stores it and shows it.
 
 ## What to build
 1. **A sidebar item, "My incentives",** on the caregiver side only. Show it only to caregivers who have at least one enrollment in the latest data from the CRM.
@@ -46,7 +46,7 @@ The CRM now runs the caregiver Incentives programs. The first one is **New Clien
       "program_id": "ncw",
       "name": "New Client Welcome",
       "icon": "home",
-      "summary": "Earn up to $100 when you become a new client's Primary caregiver and keep it up for 90 days.",
+      "summary": "Earn up to $100 when you become a new client's Primary caregiver and keep it up for 60 days.",
       "how_it_works": ["You become a new client's Primary caregiver during the promo dates, and the office accepts you into the program.", "…"],
       "rules": ["Do your first shift with the client within 30 days of becoming their Primary.", "…"]
     }
@@ -61,21 +61,21 @@ The CRM now runs the caregiver Incentives programs. The first one is **New Clien
           "match_id": 12,
           "promo": "Nov 1 – 20, 2026",
           "client_name": "Elysse D.",
-          "steps": ["Accepted", "Day 1", "90 days", "Approved", "Paid"],
+          "steps": ["Accepted", "Day 1", "60 days", "Approved", "Paid"],
           "step": 3,
           "status": "on_track",
           "status_text": "On track",
-          "next": "Keep working your scheduled shifts. Day 90 is Feb 7.",
+          "next": "Keep working your scheduled shifts. Day 60 is Jan 8.",
           "day": 30,
-          "days_total": 90,
+          "days_total": 60,
           "day1": "2026-11-10",
-          "day90": "2027-02-07",
+          "day90": "2027-01-08",
           "earned_so_far": 92,
           "amount_final": false,
           "max": 100,
           "hours_worked": 46,
           "hours_scheduled": 50,
-          "expected_pay_day": "2027-02-19",
+          "expected_pay_day": "2027-01-22",
           "paid_amount": null,
           "paid_on": null
         }
