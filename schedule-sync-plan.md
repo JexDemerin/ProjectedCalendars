@@ -1,4 +1,4 @@
-# Plan: CRM and portal schedules connected (saved Nov 7, 2026 — not built yet)
+# Plan: CRM and portal schedules connected (saved Nov 7, 2026 — CRM side built Nov 8: Raffmorales/Togetherhomecare-CRM#56; portal message: portal-schedule-sync.md)
 
 Screenshots: `schedule-sync-images/`.
 
